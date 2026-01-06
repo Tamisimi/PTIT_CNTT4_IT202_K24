@@ -62,6 +62,9 @@ insert into orders (order_id, customer_id, order_date, status, total_amount) val
 (105, 1, '2025-03-01', 'completed', 1950000.00),
 (106, 4, '2025-03-15', 'pending', 650000.00),
 (107, 5, '2025-04-01', 'completed', 3100000.00);
+(111, 1, '2025-05-20', 'completed', 4500000.00),
+(112, 2, '2025-05-25', 'completed', 13000000.00),
+(113, 5, '2025-06-01', 'completed', 6500000.00);
 
 
 -- 1. tổng tiền mỗi khách hàng chi tiêu
@@ -133,7 +136,12 @@ insert into order_items (order_id, product_id, quantity) values
 (105, 6, 2),    
 (107, 1, 1),   
 (107, 2, 1),    
-(107, 5, 5);     
+(107, 5, 5);
+(111, 5, 10),  
+(111, 4, 3),   
+(112, 1, 1),   
+(112, 5, 8), 
+(113, 5, 12);
 
 
 -- hiển thị sản phẩm đã bán được bao nhiêu sản phẩm
@@ -162,4 +170,9 @@ group by p.product_id, p.product_name, p.price having sum(oi.quantity * p.price)
 select c.customer_id, c.full_name, c.city, count(o.order_id) as tong_so_don_hang, sum(o.total_amount) as tong_tien_chi_tieu, round(avg(o.total_amount), 2) as gia_tri_don_hang_trung_binh
 from customers c join orders o on c.customer_id = o.customer_id where o.status = 'completed' 
 group by c.customer_id, c.full_name, c.city having count(o.order_id) >= 3 and sum(o.total_amount) > 10000000 order by tong_tien_chi_tieu desc;
+
+-- == BÀI 6:==
+select p.product_name as ten_san_pham, sum(oi.quantity) as tong_so_luong_ban,nsum(oi.quantity * p.price) as tong_doanh_thu, round(avg(p.price), 2) as gia_ban_trung_binh
+from products p join order_items oi on p.product_id = oi.product_id join orders o on oi.order_id = o.order_id
+where o.status = 'completed'  group by p.product_id, p.product_name having sum(oi.quantity) >= 10 order by tong_doanh_thu desc limit 5;
 
