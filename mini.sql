@@ -114,4 +114,23 @@ left join products p on p.product_id = oi.product_id
 group by  oi.order_item_id,p.product_name;
 -- Thống kê số đơn hàng của mỗi khách hàng
 
+
+-- PHẦN C – TRUY VẤN LỒNG (SUBQUERY)
+-- Lấy tên khách hàng đã mua sản phẩm thuộc danh mục có giá trung bình cao nhất
+select distinct cus.customer_name
+from customers cus
+join orders o on cus.customer_id = o.customer_id
+join order_items oi on oi.order_id = o.order_id
+join products p on oi.product_id = p.product_id
+where p.category_id = (
+    select category_id
+    from (
+        select c.category_id, avg(p.price) as avg_price
+        from categories c
+        join products p on c.category_id = p.category_id
+        group by c.category_id
+        order by avg_price desc
+        limit 1
+    ) as sub
+);
  
