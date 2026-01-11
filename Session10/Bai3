@@ -1,0 +1,46 @@
+use social_network_pro;
+
+create or replace view view_user_post as
+select 
+    u.user_id,
+    count(p.post_id) as total_user_post
+from 
+    users u
+left join 
+    posts p on u.user_id = p.user_id
+group by 
+    u.user_id;
+
+select * 
+from view_user_post
+order by total_user_post desc, user_id;
+
+select 
+    u.full_name,
+    v.total_user_post
+from 
+    users u
+join 
+    view_user_post v on u.user_id = v.user_id
+order by 
+    v.total_user_post desc, u.full_name;
+
+explain analyze
+select * 
+from users 
+where hometown = 'Hà Nội';
+
+create index idx_hometown 
+on users (hometown);
+
+explain analyze
+select * 
+from users 
+where hometown = 'Hà Nội';
+
+drop index idx_hometown on users;
+
+explain analyze
+select * 
+from users 
+where hometown = 'Hà Nội';
