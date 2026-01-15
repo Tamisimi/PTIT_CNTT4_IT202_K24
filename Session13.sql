@@ -1,7 +1,7 @@
 create database if not exists social_trigger;
 use social_trigger;
 
--- Bài 1: users, posts + trigger post_count
+-- Bài 1:
 create table users (
     user_id int primary key auto_increment,
     username varchar(50) unique not null,
@@ -39,7 +39,7 @@ insert into posts (user_id, content, created_at) values
 (2, 'bob first post', '2025-01-11 09:00:00'),
 (3, 'charlie sharing thoughts', '2025-01-12 15:00:00');
 
--- Bài 2: likes + trigger like_count + view
+-- Bài 2: 
 create table likes (
     like_id int primary key auto_increment,
     user_id int,
@@ -62,7 +62,7 @@ select u.user_id, u.username, u.post_count, coalesce(sum(p.like_count), 0) as to
 from users u left join posts p on u.user_id = p.user_id
 group by u.user_id, u.username, u.post_count;
 
--- Bài 3: ràng buộc unique + trigger before insert + update like
+-- Bài 3:
 alter table likes add constraint unique_user_post unique (user_id, post_id);
 
 delimiter //
@@ -79,7 +79,7 @@ drop trigger if exists after_like_insert;
 create trigger after_like_insert after insert on likes for each row
 begin update posts set like_count = like_count + 1 where post_id = new.post_id; end//
 
-drop trigger if exists after_like_delete;
+drop trigger after_like_delete;
 create trigger after_like_delete after delete on likes for each row
 begin update posts set like_count = like_count - 1 where post_id = old.post_id; end//
 
@@ -92,7 +92,7 @@ begin
 end//
 delimiter ;
 
--- Bài 4: post_history + trigger before update
+-- Bài 4:
 create table post_history (
     history_id int primary key auto_increment,
     post_id int,
@@ -113,7 +113,7 @@ begin
 end//
 delimiter ;
 
--- Bài 5: procedure + trigger before insert user
+-- Bài 5:
 delimiter //
 create procedure add_user(in p_username varchar(50), in p_email varchar(100), in p_created_at date)
 begin
@@ -131,7 +131,7 @@ begin
 end//
 delimiter ;
 
--- Bài 6: friendships + trigger + procedure + view
+-- Bài 6:
 create table friendships (
     follower_id int,
     followee_id int,
