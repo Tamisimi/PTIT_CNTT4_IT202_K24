@@ -1,5 +1,4 @@
-create database if not exists social_network;
-
+create database social_network;
 use social_network;
 
 create table users (
