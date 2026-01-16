@@ -421,7 +421,7 @@ end //
 
 delimiter ;
 
--- Du lieu mau de test (chay sau khi tao bang)
+-- Du lieu mau de test 
 insert into users (username) values 
 ('nguyenvana'), ('tranthingoc'), ('lehoangnam'), ('phamthihuong'), ('hoangminhduc');
 
@@ -429,7 +429,7 @@ insert into users (username) values
 insert into friend_requests (from_user_id, to_user_id) 
 values (1, 2);
 
--- Chap nhan loi moi (user 2 chap nhan request_id = 1)
+-- Chap nhan loi moi 
 call sp_accept_friend_request(1, 2);
 
 -- Kiem tra ket qua
@@ -437,5 +437,5 @@ select * from friends;
 select user_id, username, friends_count from users where user_id in (1,2);
 select * from friend_requests where request_id = 1;
 
--- Test loi: thu chap nhan lai (se rollback vi status khong con pending)
+-- Test loi: thu chap nhan lai 
 call sp_accept_friend_request(1, 2);
